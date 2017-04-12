@@ -197,6 +197,7 @@
 			<div class="row">
 				<!-- 페이지 강제 줄임 -->
 				<div class="col-lg-9 main-chart" align="center"></div>
+				
 			</div>
 		</section>
 	</section>
