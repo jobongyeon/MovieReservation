@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.cinema.movie.MovieMapper">
+
+	<!-- 영화 코드로 좋아요 -->
+	<insert id="insertLikeMovie" parameterType="String">
+		UPDATE
+			ANALYSIS
+		SET
+			ANALYSIS.anl_likeTotalCount = ANALYSIS.anl_likeTotalCount+1
+		WHERE
+			ANALYSIS.mov_code=#{movCode}
+	</insert>
+
+	<!-- 리플 평점 등록 reply 테이블 -->
+	<insert id="insertReplyToReply" parameterType="kr.co.cinema.movie.ReplyInputDto">
+		INSERT INTO 
+		REPLY(
+			REPLY.rp_code,
+			REPLY.mov_code,
+			REPLY.mem_id,
+			REPLY.rp_grade, 
+			REPLY.rp_detail,
+			REPLY.rp_insertDate) 
+		VALUES(
+			#{rpCode},
+			#{movCode},
+			#{memId},
+			#{rpGrade},
+			#{rpDetail},
+			now());	
+	</insert>
+	<!-- 평점누적 grade 테이블 -->
+	<insert id="insertReplyToGrade" parameterType="kr.co.cinema.movie.ReplyInputDto">
+		UPDATE GRADE 
+		SET
+			GRADE.gra_acGrade = GRADE.gra_acGrade+#{rpGrade},
+			GRADE.gra_totalNum = GRADE.gra_totalNum+1
+		WHERE
+			GRADE.mov_code = #{movCode}	
+	</insert>
+	
+	<!-- 리플 등록 전 중복검사  -->
+	<select id ="selectOneReply" parameterType="kr.co.cinema.movie.ReplyInputDto" resultType="Map">
+		SELECT
+			*
+		FROM
+			REPLY
+		WHERE
+			REPLY.mem_id=#{memId} &amp;&amp; REPLY.mov_code = #{movCode};	
+	</select>
+
+	<!-- 영화코드로 인원수 통계 가져오기 -->
+	<select id="selectOneMovieCountInfo" parameterType="String" resultType="map">
+		SELECT
+			ANALYSIS.anl_totalTicketCount as totalCnt,
+			ANALYSIS.anl_10sTicketCount as teenCnt,
+			ANALYSIS.anl_20sTicketCount as twentyCnt,
+			ANALYSIS.anl_30sTicketCount as thirtyCnt,
+			ANALYSIS.anl_40sTicketCount as fortyCnt,
+			ANALYSIS.anl_over50sTicketCount as overCnt,
+			ANALYSIS.anl_manTicketCount as manCnt,
+			ANALYSIS.anl_womanTicketCount as womanCnt
+		FROM
+			ANALYSIS
+		WHERE
+			ANALYSIS.mov_code=#{movCode}	
+	</select>
+	
+	<!-- 인물코드로 감독 필모그래피 가져오기 -->
+	<select id="selectListProduceFilmography" parameterType="String" resultType="map">
+		SELECT
+			MOVIE.mov_code as movCode,
+			MOVIE.mov_korName as movKorName,
+			MOVIE.mov_imgPath as movImgPath
+		FROM
+			MOVIE
+		WHERE
+			MOVIE.char_code =#{charCode}
+	</select>	
+
+	<!-- 인물코드로 필모그래피 가져오기 -->
+	<select id="selectListfilmography" parameterType="String" resultType="map">
+		SELECT
+			CHARACTERS.mov_code as movCode,
+			(SELECT MOVIE.mov_korName FROM MOVIE WHERE MOVIE.mov_code=CHARACTERS.mov_code) as movKorName,
+			(SELECT MOVIE.mov_imgPath FROM MOVIE WHERE MOVIE.mov_code=CHARACTERS.mov_code) as movImgPath
+		FROM
+			CHARACTERS
+		WHERE
+			CHARACTERS.char_code =#{charCode}	
+	</select>
+
+	<!-- 인물코드로 인물정보 가져오기 -->
+	<select id="selectOneCharInfo" parameterType="String" resultType="map">
+		SELECT
+			`CHARACTER`.char_korName as charKorName,
+			`CHARACTER`.char_engName as charEngName,
+			`CHARACTER`.char_birth as charBirth,
+			`CHARACTER`.char_profileImgPath as charImgPath,
+			`CHARACTER`.char_nation as charNation,
+			`CHARACTER`.char_bioGraphy as charBioGraphy
+		FROM
+			`CHARACTER`
+		WHERE
+			`CHARACTER`.char_code=#{charCode}
+	</select>
+	
+	<!-- 영화 코드로 리플 및 평점 가져오기 -->
+	<select id="selectListReply" parameterType="String" resultType="Map">
+		SELECT 
+			REPLY.mem_id as memId,
+			REPLY.rp_grade as rpGrade,
+			REPLY.rp_detail as rpDetail,
+			REPLY.rp_insertDate as rpInsertDate
+		FROM
+			REPLY
+		WHERE
+			REPLY.mov_code = #{movCode}		
+	</select>
+
+	<!-- 영화코드로 스틸컷 이미지 주소 가져오기 -->
+	<select id="selectListStcImg" parameterType="String" resultType="String">
+		SELECT
+			STILLCUTIMG.stcImg_path as stcImgPath
+		FROM
+			STILLCUTIMG
+		WHERE
+			STILLCUTIMG.mov_code=#{movCode}	
+	</select>
+
+	<!-- 영화코드로 인물 코드,이름 가져오기 -->
+	<select id="selectListCharNameCode" parameterType="String" resultType="Map">
+		SELECT
+			CHARACTERS.char_code as charCode,
+			`CHARACTER`.char_korName as charKorName
+		FROM
+			CHARACTERS JOIN `CHARACTER` ON `CHARACTER`.char_code=CHARACTERS.char_code
+		WHERE
+			CHARACTERS.mov_code=#{movCode}
+	</select>
+
+	<!-- 영화코드에 맞는 영화 가져오기 -->
+	<select id="selectOneMovieInfo" parameterType="String" resultType="Map">
+		SELECT
+			MOVIE.mov_code as movCode,
+			MOVIE.mov_korName as movKorName,
+			MOVIE.mov_engName as movEngName,
+			MOVIE.char_code as charCode,
+			(SELECT `CHARACTER`.char_korName FROM `CHARACTER`WHERE `CHARACTER`.char_code = MOVIE.char_code) as producer,
+			(SELECT ANALYSIS.anl_likeTotalCount FROM ANALYSIS WHERE ANALYSIS.mov_code=MOVIE.mov_code)as likeTotalCount,
+			MOVIE.mov_nation as movNation,
+			MOVIE.mov_grade as movGrade,
+			MOVIE.mov_genre as movGenre,
+			MOVIE.mov_maker as movMaker,
+			MOVIE.mov_runningTime as movRunningTime,
+			MOVIE.mov_openDate as movOpenDate,
+			MOVIE.mov_infoDetail as movInfoDetail,
+			MOVIE.mov_imgPath as movImgPath,
+			MOVIE.mov_videoPath as movVideoPath,
+			MOVIE.mov_status as movStatus,
+			ROUND(GRADE.gra_acGrade/GRADE.gra_totalNum,2) as grade
+		FROM
+			MOVIE JOIN GRADE ON MOVIE.mov_code = GRADE.mov_code
+		WHERE
+			MOVIE.mov_code = #{movCode}	
+	</select>
+
+	<!-- 상영예정작 가져오기 -->
+	<select id="selectListExpected" resultType="map">
+		SELECT
+			MOVIE.mov_code as movCode,
+			MOVIE.mov_korName as movKorName,
+			MOVIE.mov_grade as movGrade,
+			MOVIE.mov_imgPath as movImgPath,
+			MOVIE.mov_openDate as movOpenDate,
+			MOVIE.mov_status as movStatus,
+			ROUND(GRADE.gra_acGrade/GRADE.gra_totalNum,2) as grade ,
+			ROUND(GRADE.gra_acGrade/GRADE.gra_totalNum,0) as starGrade
+		FROM
+			MOVIE LEFT JOIN GRADE ON GRADE.mov_code = MOVIE.mov_code
+		WHERE
+			MOVIE.mov_status ='상영예정'
+		ORDER BY 
+			movOpenDate DESC	
+	</select>
+	
+	<!-- 최신개봉작 가져오기 -->
+	<select id="selectListNewMovie" resultType="map">
+		SELECT
+			MOVIE.mov_code as movCode,
+			MOVIE.mov_korName as movKorName,
+			MOVIE.mov_grade as movGrade,
+			MOVIE.mov_imgPath as movImgPath,
+			MOVIE.mov_openDate as movOpenDate,
+			MOVIE.mov_status as movStatus,
+			ROUND(GRADE.gra_acGrade/GRADE.gra_totalNum,2) as grade,
+			ROUND(GRADE.gra_acGrade/GRADE.gra_totalNum,0) as starGrade 
+		FROM
+			MOVIE LEFT JOIN GRADE ON GRADE.mov_code = MOVIE.mov_code
+		WHERE
+			MOVIE.mov_status='상영중'
+		ORDER BY 
+			movOpenDate DESC	
+	</select>
+
+	<!-- 박스오피스 리스트 가져오기 -->
+	<select id="selectListBoxOffice" resultType="map">
+		SELECT
+			MOVIE.mov_code as movCode,
+			MOVIE.mov_korName as movKorName,
+			MOVIE.mov_grade as movGrade,
+			MOVIE.mov_imgPath as movImgPath,
+			MOVIE.mov_status as movStatus,
+			ROUND(GRADE.gra_acGrade/GRADE.gra_totalNum,2) as grade ,
+			ROUND(GRADE.gra_acGrade/GRADE.gra_totalNum,0) as starGrade,
+			ANALYSIS.anl_totalTicketCount as totalTicketCount	
+		FROM
+			MOVIE LEFT JOIN ANALYSIS ON ANALYSIS.mov_code = MOVIE.mov_code
+					LEFT JOIN GRADE ON GRADE.mov_code = MOVIE.mov_code
+		WHERE
+			MOVIE.mov_status='상영중'
+		ORDER BY 
+			ANALYSIS.anl_totalTicketCount DESC
+	</select>
+	
+	<!-- 홈화면 박스오피스 리스트 가져오기 -->
+	<select id="selectListBoxOfficeHome" resultType="map">
+		SELECT
+			MOVIE.mov_code as movCode,
+			MOVIE.mov_korName as movKorName,
+			MOVIE.mov_grade as movGrade,
+			MOVIE.mov_imgPath as movImgPath,
+			MOVIE.mov_status as movStatus,
+			ROUND(GRADE.gra_acGrade/GRADE.gra_totalNum,2) as grade ,
+			ROUND(GRADE.gra_acGrade/GRADE.gra_totalNum,0) as starGrade,
+			ANALYSIS.anl_totalTicketCount as totalTicketCount	
+		FROM
+			MOVIE LEFT JOIN ANALYSIS ON ANALYSIS.mov_code = MOVIE.mov_code
+					LEFT JOIN GRADE ON GRADE.mov_code = MOVIE.mov_code
+		WHERE
+			MOVIE.mov_status='상영중'
+		ORDER BY 
+			ANALYSIS.anl_totalTicketCount DESC LIMIT 4
+	</select>	
+	
+	
+</mapper>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.cinema.analisys.AnalisysMapper">
+<!-- ///////////////////// 영화 통계 관련 ////////////////////// -->
+ 	<select id="selectMovieList" parameterType="String" resultType="Map">
+ 		SELECT
+			MOVIE.mov_korName AS movKorName,
+			MOVIE.mov_code AS movCode,
+			MOVIE.mov_genre AS movGenre,
+			`CHARACTER`.char_korName AS charKorName
+		FROM
+			MOVIE
+		JOIN
+			ANALYSIS
+		ON
+			MOVIE.mov_code=ANALYSIS.mov_code
+		JOIN
+			`CHARACTER`
+		ON
+			MOVIE.char_code = `CHARACTER`.char_code
+		WHERE
+			mov_korName	like #{movName}
+ 	</select>
+ 
+ <!-- ///////////////////// 지점 통계 관련 ////////////////////// -->
+ 	<!-- 지점 정보 가져오기-->
+ 	<select id="selectBranchInfo" resultType="kr.co.cinema.dto.Branch">
+ 		SELECT
+ 			brc_code AS brcCode,
+ 			brc_name AS brcName,
+ 			brc_local AS brcLocal,
+ 			brc_addr AS brcAddr
+ 		FROM
+ 			BRANCH
+ 	</select>
+ 
+	 <!-- 지점에서 영화 매출,예매수 확인 -->
+	 <select id="seleceBrcCntSale" parameterType="Map" resultType="Map">
+	 	SELECT
+			BRANCH.brc_name AS brcName,
+			<if test="movKorName=='all'">
+			MOVIE.mov_korName AS movKorName,
+			</if>
+			SUM(BRANCH_DAY_COUNT.brcCnt_clientCount) AS brcCntClientCount,
+			SUM(BRANCH_DAY_COUNT.brcCnt_saleTotal) AS brcCntSaleTotal,
+			BRANCH_DAY_COUNT.brcCnt_date AS brcCntDate
+		FROM
+			BRANCH_DAY_COUNT
+		JOIN
+			BRANCH
+		ON
+			BRANCH_DAY_COUNT.brc_code=BRANCH.brc_code
+		JOIN
+			MOVIE
+		ON
+			BRANCH_DAY_COUNT.mov_code=MOVIE.mov_code
+		WHERE
+			BRANCH_DAY_COUNT.brcCnt_date between #{brcCntDate1} and #{brcCntDate2}
+			<if test="brcName != 'main'">
+		AND
+			BRANCH.brc_name=#{brcName}	
+			</if>
+		GROUP BY
+			<if test="movKorName=='all'">
+			mov_korName,
+			</if> 
+			brc_name
+		ORDER BY brcName
+	 </select>
+	 
+	 <!-- 영화/지점/별로 예매/매출 가져오기 -->
+	 <select id="selectSaleCnt" parameterType="Map" resultType="Map">
+		SELECT
+			MOVIE.mov_korName AS movKorName,
+			BRANCH.brc_name AS brcName,
+		<if test="cntKind=='예매'">
+			sum(brcCnt_clientCount) AS brcCntClientCount
+		</if>
+		<if test="cntKind=='매출'">
+			sum(brcCnt_saleTotal) AS brcCntSaleTotal
+		</if>
+		<if test="cntKind=='전체'">
+			sum(brcCnt_clientCount) AS brcCntClientCount,
+			sum(brcCnt_saleTotal) AS brcCntSaleTotal
+		</if>
+		FROM
+			BRANCH_DAY_COUNT
+		JOIN
+			MOVIE
+		ON
+			BRANCH_DAY_COUNT.mov_code=MOVIE.mov_code
+		JOIN
+			BRANCH
+		ON
+			BRANCH_DAY_COUNT.brc_code=BRANCH.brc_code
+		WHERE
+			mov_korName=#{movKorName}
+		<if test="brcName !='전체'">
+		AND
+			brc_name=#{brcName}
+		</if>
+		GROUP BY brc_name
+	 </select>
+	 
+	 <!-- ///////////////////// 날짜 통계 관련 ////////////////////// -->
+	 
+	 <!-- 날짜별 통계 가져오기 -->
+	 <select id="selectDateCnt" resultType="Map" parameterType="Map">
+		SELECT
+			BRANCH_DAY_COUNT.brcCnt_date AS brcCntDate,
+			BRANCH.brc_name AS brcName,
+			MOVIE.mov_korName AS movKorName,
+			SUM(BRANCH_DAY_COUNT.brcCnt_clientCount) AS brcCntClientCount,
+			SUM(BRANCH_DAY_COUNT.brcCnt_saleTotal) AS brcCntSaleTotal
+		FROM
+			BRANCH_DAY_COUNT
+		JOIN
+			BRANCH
+		ON
+			BRANCH.brc_code=BRANCH_DAY_COUNT.brc_code
+		JOIN
+			MOVIE
+		ON
+			BRANCH_DAY_COUNT.mov_code=MOVIE.mov_code
+		WHERE
+		<if test="brcName != 'main'">
+			BRANCH.brc_name=#{brcName}
+		AND
+		</if>
+			BRANCH_DAY_COUNT.brcCnt_date 
+			BETWEEN
+				#{brcCntDate1}
+			AND 
+				#{brcCntDate2}
+		GROUP BY
+			brcCnt_date,
+			brc_name,
+			mov_korName
+		ORDER BY
+			brcCnt_date
+	 </select>
+</mapper>

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.cinema.payment.PaymentMapper">
+
+	<!-- payment 상태 업데이트 -->
+	<update id="updatePaymentStatus" parameterType="Map">
+		UPDATE 
+			PAYMENT
+		SET
+			pmt_status=#{pmtStatus}
+		WHERE
+			pmt_code=#{pmtCode}
+	</update>
+
+	<!-- 지점별 일일예매 / 매출 등록 -->
+	<update id="updateBrcDayCount" parameterType="kr.co.cinema.dto.BranchAndBranchDayCount">
+		UPDATE
+			BRANCH_DAY_COUNT
+		SET
+			brcCnt_clientCount = brcCnt_clientCount + #{brcCntClientCount},
+			brcCnt_saleTotal = brcCnt_saleTotal + #{brcCntSaleTotal}
+		WHERE
+			brc_code=#{brcCode}
+		AND
+			mov_code=#{movCode}
+		AND
+			brcCnt_date = #{brcCntDate}
+	</update>
+	
+	<!-- 영화 코드 가져오기 -->
+	<select id="selectMovcode" parameterType="String" resultType="int">
+		SELECT
+			mov_code AS movCode
+		FROM
+			SCREEN_SCHEDULE
+		WHERE
+			scs_code=#{scsCode}
+	</select>
+	
+	<!-- Analysis 업데이트 -->
+	<update id="updateAnalysis" parameterType="kr.co.cinema.dto.Analysis">
+		UPDATE 
+			ANALYSIS
+		SET 
+			anl_totalTicketCount = anl_totalTicketCount + #{anlTotalTicketCount},
+			anl_10sTicketCount = anl_10sTicketCount + #{anl10sTicketCount},
+			anl_20sTicketCount = anl_20sTicketCount + #{anl20sTicketCount},
+			anl_30sTicketCount = anl_30sTicketCount + #{anl30sTicketCount},
+			anl_40sTicketCount = anl_40sTicketCount + #{anl40sTicketCount},
+			anl_over50sTicketCount = anl_over50sTicketCount + #{anlOver50sTicketCount},
+			anl_manTicketCount = anl_manTicketCount + #{anlManTicketCount},
+			anl_womanTicketCount = anl_womanTicketCount + #{anlWomanTicketCount},
+			anl_acSales = anl_acSales + #{anlAcSales},
+			anl_finalModifyDate=now()
+		WHERE
+			mov_code=#{movCode}
+		
+	</update>
+
+	<!-- 비회원 정보 가져오기 -->
+	<select id="selectNmemInfo" parameterType="String" resultType="Map">
+		SELECT
+			nmem_birth AS nmemBirth,
+			nmem_code AS nmemCode
+		FROM
+			NON_MEMBER
+		WHERE
+			nmem_code=#{nmemCode}
+	</select>
+
+	<!-- 좌석 사용여부 업데이트 -->
+	<update id="updateSeat" parameterType="Map">
+		UPDATE 
+			SEAT
+		SET
+			seat_useStatus=#{seatUseStatus}
+		WHERE
+			seat_code=#{seatCode}
+	</update>
+
+	<!-- 좌석 다:다 등록 -->
+	<insert id="insertSeats" parameterType="Map">
+		INSERT INTO SEATS(
+			seats_code,
+			pmt_code,
+			seat_code
+		)VALUE (
+			#{seatsCode},
+			#{pmtCode},
+			#{seatCode}
+			)
+	</insert>
+	
+	<!-- 비회원 코드 가져오기 -->
+	<select id="selectNmemCode" parameterType="String" resultType="String">
+		SELECT
+			max(nmem_code) AS nmemCode
+		FROM
+			NON_MEMBER
+		WHERE
+			nmem_phone=#{phone}
+	</select>
+	
+	<!-- 좌석 정보 가져오기 -->
+	<select id="selectSeatInfo" parameterType="String" resultType="kr.co.cinema.dto.Seat">
+		SELECT
+			seat_row AS seatRow,
+			seat_col AS seatCol
+		FROM
+			SEAT
+		WHERE
+			seat_code = #{seatCode}
+	</select>
+	
+	
+	<!-- 회원 정보 가져오기 -->
+	<select id="selectMemInfo" parameterType="String" resultType="Map">
+		SELECT
+			mem_id AS memId,
+			mem_mileage AS memMileage,
+			mem_birth AS memBirth,
+			mem_gender AS memGender
+		FROM
+			MEMBER
+		WHERE
+			mem_id=#{memId}
+	</select>
+	
+	<!-- 결제페이지 영화정보 보여주기 -->
+	<select id="selectMovieInfo" parameterType="String" resultType="Map">
+		SELECT 
+			SCREEN_SCHEDULE.scs_code AS scsCode,
+			MOVIE.mov_code AS movCode,
+			MOVIE.mov_korName AS movKorName,
+			MOVIE.mov_grade AS movGrade,
+			MOVIE.mov_runningTime AS movRunningTime,
+			MOVIE.mov_imgPath AS movImgPath,
+			SCREEN_SCHEDULE.scs_startTime AS scsStartTime,
+			SCREEN_SCHEDULE.scs_finishTime AS scsFinishTime,
+			SCREEN_SCHEDULE.scs_date AS scsDate,
+			SCREEN_SCHEDULE.scs_timeDiscount AS scsTimeDiscount,
+			SCREEN_SCHEDULE.scs_screen AS scsScreen,
+			BRANCH.brc_code AS brcCode,
+			BRANCH.brc_local AS brcLocal,
+			BRANCH.brc_name AS brcName,
+			(
+				SELECT 
+					scco_code
+				FROM
+					SCREEN_COST
+				WHERE
+					scco_screen=SCREEN_SCHEDULE.scs_screen
+				AND
+					scco_status="적용"
+			) AS sccoCode,
+			(
+				SELECT
+					dcinf_code
+				FROM
+					DISCOUNT_INFO
+				WHERE
+					dcinf_info=SCREEN_SCHEDULE.scs_timeDiscount
+				AND
+					dcinf_status="적용"
+				AND
+					dcinf_separation="시간"
+			)AS dcinfCode
+		FROM
+			SCREEN_SCHEDULE
+		JOIN
+			MOVIE
+		ON
+			SCREEN_SCHEDULE.mov_code = MOVIE.mov_code
+		JOIN
+			BRANCH
+		ON
+			SCREEN_SCHEDULE.brc_code = BRANCH.brc_code
+		WHERE
+			scs_code=#{scsCode}
+	</select>
+	
+	<!-- 할인정보 가져오기 -->
+	<select id="selectDiscountInfo" resultType="kr.co.cinema.dto.DiscountInfo">
+		SELECT 
+			dcinf_code AS dcinfCode,
+			dcinf_info AS dcinfInfo,
+			dcinf_price AS dcinfPrice,
+			dcinf_applyYear AS dcinfApplyYear,
+			dcinf_status AS dcinfStatus,
+			dcinf_separation AS dcinfSeparation
+		FROM 
+			DISCOUNT_INFO
+		WHERE 
+			dcinf_status="적용"
+	</select>
+	
+	<!-- 상영 단가 가져오기 -->
+	<select id="selectScreenCost" resultType="kr.co.cinema.dto.ScreenCost">
+		SELECT
+			scco_code AS sccoCode,
+			scco_screen AS sccoScreen,
+			scco_price AS sccoPrice,
+			scco_applyYear AS sccoApplyYear
+		FROM
+			SCREEN_COST
+		WHERE
+			scco_status="적용"
+	</select>
+
+	<!-- 결제 등록 -->
+	<insert id="insertPayment" parameterType="kr.co.cinema.dto.Payment">
+		INSERT INTO PAYMENT(
+			pmt_code,
+			scs_code,
+			mem_id,
+			nmem_code,
+			scco_code,
+			dcinf_code,
+			pmt_ticketNum,
+			pmt_price,
+			pmt_status,
+			pmt_date
+		) VALUES (
+			#{pmtCode},
+			#{scsCode},
+			#{memId},
+			#{nmemCode},
+			#{sccoCode},
+			#{dcinfCode},
+			#{pmtTicketNum},
+			#{pmtPrice},
+			'결제완료',
+			now()
+			)
+	</insert>
+	
+	<!-- 마일리지 등록 -->
+	<insert id="insertMileage" parameterType="kr.co.cinema.dto.Mileage">
+		INSERT INTO MILEAGE(
+			mil_code,
+			pmt_code,
+			mem_id,
+			mil_use,
+			mil_save,
+			mil_date
+		) VALUES(
+			#{milCode},
+			#{pmtCode},
+			#{memId},
+			#{milUse},
+			#{milSave},
+			now()
+		)
+	</insert>
+	
+	<!-- 멤버 마일리지 업데이트 -->
+	<update id="updateMemMileage" parameterType="String">
+	UPDATE 
+		MEMBER
+	SET
+		mem_mileage=(SELECT
+						(SUM(mil_save)-SUM(mil_use))
+					FROM
+						MILEAGE
+					WHERE
+						mem_id=#{memId}
+						)
+	WHERE 
+		mem_id=#{memId}
+	</update>
+	
+	<!-- 결제 코드로 결제 정보 가져오기 -->
+	<select id="selectPaymentInfo" parameterType="String" resultType="Map">
+		SELECT
+			scs_code AS scsCode,
+			mem_id AS memId,
+			nmem_code AS nmemCode,
+			pmt_ticketNum AS pmtTicketNum,
+			pmt_price AS pmtPrice,
+			pmt_status AS pmtStatus
+		FROM
+			PAYMENT
+		WHERE
+			pmt_code=#{pmtCode}
+	</select>
+	
+	<!-- 좌석 다:다 에서 결제코드로 좌석정보 가져오기 -->
+	<select id="selectSeatsInfo" parameterType="String" resultType="String">
+		SELECT
+			seat_code AS seatCode
+		FROM
+			SEATS
+		WHERE
+			pmt_code=#{pmtCode}
+	</select>
+	
+	
+</mapper>

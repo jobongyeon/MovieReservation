@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.co.cinema.screen.ScreenMapper">
+
+<!--****************************************************************************************
+	상영관관리쿼리
+	******************************************************************************************-->
+
+	<!-- 상영관등록전 지점이름으로 지점코드 조회하기 위한 쿼리 -->
+	<select id="selectBrcCode"
+			resultType="String"
+			parameterType="String">
+			SELECT	BRANCH.brc_code 
+			FROM	BRANCH 
+			WHERE	BRANCH.brc_name = #{selectBrcCode};
+	</select>
+
+	<!-- 상영관등록 -->
+	<insert id="insertScreen"
+			parameterType="kr.co.cinema.dto.Screen">
+			INSERT INTO	SCREEN 
+						(scr_code,
+						 brc_code,
+						 scr_name,
+						 scr_rowSize,
+						 scr_colSize) 
+			VALUES		
+						(#{scrCode},
+						 #{brcCode},
+						 #{scrName},
+						 #{scrRowSize},
+						 #{scrColSize}); 
+			
+	</insert>
+	
+	<!-- 상영관리스트조회 -->
+	<select id="selectScreenList"
+			resultType="kr.co.cinema.dto.Screen">
+			SELECT		BRANCH.brc_name		AS	brcName,
+						SCREEN.scr_name		AS	scrName,
+						SCREEN.scr_rowSize	AS	scrRowSize,
+						SCREEN.scr_colSize	AS	scrColSize
+			FROM		SCREEN
+						JOIN	BRANCH
+						ON		SCREEN.brc_code = BRANCH.brc_code
+			ORDER BY	BRANCH.brc_name	ASC;
+	</select>
+	<!--****************************************************************************************
+	상영일정관리쿼리
+	******************************************************************************************-->
+
+	<!-- 상영일정등록전 영화이름으로 영화코드 조회 -->
+	<select id="selectMovieCode" resultType="Map" parameterType="String">
+			SELECT
+				MOVIE.mov_code AS movCode,
+				mov_runningTime AS movRunTime
+			FROM
+				MOVIE 
+			WHERE
+				MOVIE.mov_korName = #{movKorName}; 
+	</select>
+	
+	<!-- 상영종류 가져오기 -->
+	<select id="selectScreenCost" resultType="String">
+		SELECT
+			scco_screen AS sccoScreen
+		FROM
+			SCREEN_COST
+		WHERE
+			scco_status="적용"
+	</select>
+	
+	<!-- 지점코드로 상영관 정보 가져오기 -->
+	<select id="selectScreenInfo" parameterType="int" resultType="Map">
+		SELECT
+			SCREEN.scr_code AS scrCode,
+			SCREEN.scr_name AS scrName,
+			SCREEN.scr_rowSize AS scrRowSize,
+			SCREEN.scr_colSize AS scrColSize,
+			BRANCH.brc_name AS brcName,
+			BRANCH.brc_code AS brcCode
+		FROM
+			SCREEN
+		JOIN
+			BRANCH
+		ON
+			SCREEN.brc_code=BRANCH.brc_code
+		WHERE
+			BRANCH.brc_code=#{brcCode}
+	</select>
+	<!--  지점 별 행/열 사이즈 가져오기 -->
+	<select id="selectRowCol" parameterType="String" resultType="Map">
+		SELECT
+			scr_rowSize AS scrRowSize,
+			scr_colSize AS scrColSize
+		FROM
+			SCREEN
+		WHERE
+			scr_code=#{scrCode}
+	</select>
+	
+	<!-- 상영 일정 등록 -->
+	<insert id="insertScs" parameterType="kr.co.cinema.dto.ScreenSchedule">
+		INSERT INTO 
+			SCREEN_SCHEDULE(
+				scs_code,
+				mov_code,
+				brc_code,
+				scr_code,
+				scs_date,
+				scs_startTime,
+				scs_finishTime,
+				scs_screen,
+				scs_timeDiscount,
+				scs_insertDate,
+				scs_status)
+			VALUES(
+				#{scsCode},
+				#{movCode},
+				#{brcCode},
+				#{scrCode},
+				#{scsDate},
+				#{scsStartTime},
+				#{scsFinishTime},
+				#{scsScreen},
+				#{scsTimeDiscount},
+				now(),
+				"상영전"
+				)
+	</insert>
+	
+	<!-- 좌석 정보 등록 -->
+	<insert id="insertSeat" parameterType="kr.co.cinema.dto.Seat">
+		INSERT INTO
+			SEAT(
+			seat_code,
+			scs_code,
+			scr_code,
+			seat_row,
+			seat_col,
+			seat_useStatus
+		)VALUES(
+			#{seatCode},
+			#{scsCode},
+			#{scrCode},
+			#{seatRow},
+			#{seatCol},
+			"able")
+	</insert>
+	
+	<!-- 상영일정 리스트 -->
+	<select id="selectScreenSchedule" resultType="Map">
+		SELECT
+			MOVIE.mov_korName AS movKorName,
+			BRANCH.brc_name AS brcName,
+			SCREEN.scr_name AS scrName,
+			SCREEN_SCHEDULE.scs_date AS scsDate,
+			SCREEN_SCHEDULE.scs_screen AS scsScreen,
+			SCREEN_SCHEDULE.scs_timeDiscount AS scsTimeDiscount,
+			SCREEN_SCHEDULE.scs_startTime AS scsStartTime,
+			SCREEN_SCHEDULE.scs_finishTime AS scsFinishTime
+		FROM
+			SCREEN_SCHEDULE
+		JOIN
+			MOVIE
+		ON
+			SCREEN_SCHEDULE.mov_code=MOVIE.mov_code
+		JOIN
+			BRANCH
+		ON
+			SCREEN_SCHEDULE.brc_code=BRANCH.brc_code
+		JOIN
+			SCREEN
+		ON
+			SCREEN_SCHEDULE.scr_code=SCREEN.scr_code
+	
+	</select>
+	
+</mapper>

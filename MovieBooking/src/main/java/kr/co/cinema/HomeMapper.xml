@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="kr.co.cinema.HomeMapper">
+
+	<!-- 마지막 코드(PK) 가져오기(비회원, 마일리지, 한줄평/평점, 한줄평추천, 좌석(다:다) -->
+	<select id="selectCode" parameterType="Map" resultType="String">
+		<choose>
+			<!-- 마지막 비회원 코드 가져오기 -->
+			<when test='kind.equals("nonMember")'>
+				SELECT
+					max(nmem_code)	
+				FROM
+					NON_MEMBER
+			</when>
+			
+			<!-- 마지막 마일리지 코드 가져오기 -->
+			<when test='kind.equals("mileage")'>
+				SELECT
+					max(mil_code)
+				FROM
+					MILEAGE	
+			</when>
+			
+			<!-- 마지막 한줄평/평점 코드 가져오기 -->
+			<when test='kind.equals("reply")'>
+				SELECT
+					max(rp_code)
+				FROM
+					REPLY
+			</when>
+			
+			<!-- 마지막 한줄평추천 코드 가져오기 -->
+			<when test='kind.equals("replyRecommend")'>
+				SELECT
+					max(reco_code)
+				FROM
+					REPLY_RECOMMEND
+			</when>
+			
+			<!-- 마지막 좌석(다:다) 코드 가져오기 -->
+			<when test='kind.equals("seats")'>
+				SELECT
+					max(seats_code)
+				FROM
+					SEATS
+			</when>
+			<otherwise>
+			
+			</otherwise>
+		
+		</choose>
+		
+	</select>
+	
+	<!-- Object code가져오기 -->
+	<select id="selectObjectCode" parameterType="Map" resultType="String">
+	
+		<choose>
+			<!-- 마지막 상영관 코드 가져오기 -->
+			 <when test="ScreenBrcCode != null">
+				SELECT
+					max(scr_code)
+				FROM
+					SCREEN
+				WHERE 
+					brc_code=#{ScreenBrcCode}
+			</when>
+			
+			<!-- 마지막 지점별 일일예매/매출 코드 가져오기 -->
+			<when test='BDCBrcCode != null'>
+				SELECT
+					max(brcCnt_code)
+				FROM
+					BRANCH_DAY_COUNT
+				WHERE
+					 brc_code=#{BDCBrcCode}
+			</when>
+			
+			<!-- 마지막 상영일정 코드 가져오기 -->
+			<when test="srcCode != null">
+				SELECT
+					max(scs_code)
+				FROM
+					SCREEN_SCHEDULE
+				WHERE
+					scr_code=#{srcCode}
+			</when>
+			
+			<!-- 마지막  좌석 코드 가져오기-->
+			<when test="SeatScsCode != null">
+				SELECT
+					max(seat_code)
+				FROM
+					SEAT
+				WHERE
+					substr(scs_code,9)=substr(#{SeatScsCode},9)
+			</when>
+			
+			<!-- 마지막 결제 코드 가져오기 -->
+			<when test="PaymentScsCode != null">
+				SELECT
+					max(pmt_code)
+				FROM
+					PAYMENT
+				WHERE
+					substr(scs_code,9)=substr(#{PaymentScsCode},9)		
+			</when>
+			<otherwise>
+			</otherwise>
+			
+		</choose>
+		
+	</select>
+
+</mapper>

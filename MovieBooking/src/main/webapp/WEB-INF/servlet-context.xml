@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- url property 0307봉연 (?zeroDateTimeBehavior=convertToNull)추가 
+        1970년전의 DATE타입의 데이터 조회시 null값으로 셋팅되는 오류발생 
+		정확하지 않지만 system time이 1970-01-01로 시작되는 문제-->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://better4307.cafe24.com/better4307?zeroDateTimeBehavior=convertToNull"/>
+        <property name="username" value="better4307"/>
+        <property name="password" value="rladnqls!@"/>
+        <!-- validationQuery:유효 검사용 쿼리 --> 
+        <property name="validationQuery" value="select 1"/>
+        <!-- testWhileIdle:컨넥션이 놀고 있을때 -_-; validationQuery 를 이용해서 유효성 검사를 할지 여부. -->
+        <property name="testWhileIdle" value="true"/>
+        <!-- timeBetweenEvictionRunsMillis:해당 밀리초마다 validationQuery 를 이용하여 유효성 검사 진행 -->
+        <property name="timeBetweenEvictionRunsMillis" value="7200000"/>
+    </bean>
+    
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- mybatis 세션생성시 사용할 dataSource주입 -->
+        <property name="dataSource" ref="dataSource" />
+        <!-- mybatis 세션생성후 쿼리를 실행시킬때 사용할 쿼리위치(메퍼)설정 -->
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:kr/co/cinema/admin/AdminMapper.xml</value>
+				<value>classpath:kr/co/cinema/analysis/AnalysisMapper.xml</value>
+				<value>classpath:kr/co/cinema/booking/BookingMapper.xml</value>
+				<value>classpath:kr/co/cinema/management/ManagementMapper.xml</value>
+				<value>classpath:kr/co/cinema/member/MemberMapper.xml</value>
+				<value>classpath:kr/co/cinema/movie/MovieMapper.xml</value>
+				<value>classpath:kr/co/cinema/payment/PaymentMapper.xml</value>
+				<value>classpath:kr/co/cinema/screen/ScreenMapper.xml</value>
+				<value>classpath:kr/co/cinema/branch/BranchMapper.xml</value>
+				<value>classpath:kr/co/cinema/HomeMapper.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+	<!-- 멀티파트 빈 추가 03/06 -->
+	<!-- MultipartResolver 설정 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="5242880000" />
+	</bean>
+    
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<context:component-scan base-package="kr.co.cinema" />
+	
+	
+	
+</beans>

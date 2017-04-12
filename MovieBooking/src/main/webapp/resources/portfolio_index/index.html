@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+
+  </head>
+  <body class="grey lighten-3">
+
+    <!-- 네비게이션 바 -->
+    <div class="navbar-fixed">
+      <nav class="light-blue darken-4">
+        <div class="nav-wrapper container">
+          <a href="" class="brand-logo">Jbin Portfolio</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <!-- 사이드바 버튼 -->
+            <li><a href="#" data-activates="slide-out" id="sideNavBtn">
+              <i class="material-icons left">perm_identity</i>
+              PROFILE</a>
+            </li>
+            <!-- 포트폴리오 -->
+            <li><a href="#portfolio"><i class="material-icons left">dashboard</i>PORTFOLIO</a></li>
+            <!-- 스킬 -->
+            <li><a href="#skill">  <i class="material-icons left">list</i>SKILL</a></li>
+
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+
+    <!-- 사이드바 -->
+    <ul id="slide-out" class="side-nav">
+      <li>
+        <div class="userView">
+          <!-- 프로필 배경 -->
+          <div class="background">
+          <img src="./img/profile_back.png">
+          </div>
+          <!-- 프로필 -->
+          <a href="#!user"><img class="circle materialboxed" src="./img/profile_img.jpg"></a>
+          <a href="#!name">
+            <span class="white-text name">김 정빈</a>
+          <a href="#!email"><span class="white-text email">kjb7907@naver.com</span></a>
+        </div>
+      </li>
+      <!-- part1 -->
+      <li>
+        <a href="#!">
+          <div>
+            ㅎㅎㅎ
+          </div>
+        </a>
+      </li>
+      <!-- part2 -->
+      <li><div class="divider"></div></li>
+      <!-- 블로그 -->
+      <li>
+        <a href="http://blog.naver.com/kjb7907" target="_blank"><img src="./img/icon_blog.png" style="position:relative ; top:7px; margin-right:5px">blog</a>
+      </li>
+      <!-- 티스토리 블로그 -->
+      <li>
+        <a href="http://jhonnywest.tistory.com/" target="_blank"><img src="./img/icon_tistory.png" style="position:relative ; top:7px; margin-right:5px">blog</a>
+      </li>
+      <!-- 깃 허브 -->
+      <li>
+        <a href="https://github.com/kjb7907" target="_blank"><img src="./img/icon_github.png" style="position:relative ; top:7px; margin-right:5px">git hub</a>
+      </li>
+    </ul>
+
+    <!-- 사이드바 스크립트 -->
+    <script>
+      $("#sideNavBtn").sideNav({menuWidth:350});
+    </script>
+
+
+
+
+    <a name="portfolio"></a> <!-- 포트폴리오 위치 -->
+
+    <!-- 포트폴리오 -->
+    <div class="section white">
+      <div class="row container">
+        <h4 class="header">PORTFOLIO</h4>
+        <p class="grey-text text-darken-3 lighten-3">포트폴리오</p>
+      </div>
+    </div>
+
+
+    <!-- 포트폴리오 카드 컨테이너 -->
+    <div class="container"> <!-- 포트폴리오 카드 컨테이너  시작-->
+
+      <div class="row"> <!-- 행 1 열기-->
+      	
+      	<div class="col s2"></div>
+
+        <a href="#modal1" style=" text-decoration:none; color:#000000 ">
+          <div class="col s4">
+            <div class="card">
+              <div class="card-image">
+                <img src="./img/portfolio_img//movie/movie_main.png" style="height:250px">
+              </div>
+              <div class="card-content">
+                <p>[spring]영화관 관리 / 예매 시스템</p>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#modal2" style=" text-decoration:none; color:#000000">
+          <div class="col s4">
+            <div class="card">
+              <div class="card-image">
+                <img src="./img/portfolio_img/lib/lib_main.png" style="height:250px">
+              </div>
+              <div class="card-content">
+                <p>[spring]도서관리/대여 시스템</p>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div> <!-- 행 1 닫기 -->
+
+
+
+      <div class="row"> <!-- 행 2 열기 -->
+
+        <a href="#modal3" style=" text-decoration:none; color:#000000">
+          <div class="col s4">
+            <div class="card">
+              <div class="card-image">
+                <img src="./img/portfolio_img/model1board/model1board_main.png" style="height:250px">
+              </div>
+              <div class="card-content">
+                <p>[MODEL1]게시판</p>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#modal4" style=" text-decoration:none; color:#000000">
+          <div class="col s4">
+            <div class="card">
+              <div class="card-image">
+                <img src="./img/portfolio_img/staff/staff_main.png" style="height:250px">
+              </div>
+              <div class="card-content">
+                <p>[MODEL2]사원관리 CRUD</p>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="#modal5" style=" text-decoration:none; color:#000000">
+          <div class="col s4">
+            <div class="card">
+              <div class="card-image">
+                <img src="./img/portfolio_img/nodejsboard/nodejsboard_main.png" style="height:250px">
+              </div>
+              <div class="card-content">
+                <p>[node.js]게시판</p>
+              </div>
+            </div>
+          </div>
+        </a>
+
+      </div> <!-- 행 2 닫기 -->
+
+    </div> <!-- 포트폴리오 카드 컨테이너 닫기 -->
+
+
+  <div class="container"> <!-- modal 컨테이너 -->
+
+    <!-- 영화관리 modal -->
+    <div id="modal1" class="modal" style=" width:80%; max-height:90%;">
+      <div class="modal-content ">
+        <h4>영화관리/예매 시스템</h4>
+        <div> <!--본문 div 열기 -->
+
+          <ul class="collection">
+
+            <!-- 리스트 1 -->
+            <li class="collection-item">
+              <!-- 깃허브 or 링크 div -->
+              <div class="row"> <!-- 깃허브 or 링크 div 열기-->
+                <h5>호스팅링크 / github</h5>
+              </div> <!-- 깃허브 or 링크 div 닫기 -->
+            </li>
+
+            <!-- 리스트 2 -->
+            <li class="collection-item">
+              <!-- 개발환경 div -->
+              <div class="row"> <!-- 개발환경 div 열기 -->
+                <h5>개발환경</h5>
+              </div> <!-- 개발환경 div 닫기 -->
+            </li>
+
+            <!-- 리스트 3 -->
+            <li class="collection-item">
+              <!-- 상세설명 div -->
+              <div class="row"> <!-- 상세설명 div 열기 -->
+                <h5>설명</h5>
+              </div> <!-- 상세설명 div 닫기 -->
+            </li>
+
+            <!-- 리스트 4 -->
+            <li class="collection-item">
+              <!-- 기능설명 div -->
+              <div> <!-- 기능설명 div 열기 -->
+                <h5>기능</h5>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/1team_movieMain.jpg" class="materialboxed responsive-img"></div>
+                  <div class="col s7">기능</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/1team_movieMain.jpg" class="materialboxed responsive-img"></div>
+                  <div class="col s7">기능</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/1team_movieMain.jpg" class="materialboxed responsive-img"></div>
+                  <div class="col s7">기능</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/1team_movieMain.jpg" class="materialboxed responsive-img"></div>
+                  <div class="col s7">기능</div>
+                </div>
+
+              </div> <!-- 기능설명 div 닫기 -->
+            </li>
+
+          </ul>
+
+        </div> <!--본문 div 닫기 -->
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">닫기</a>
+      </div>
+    </div> <!-- modal div 닫기-->
+
+
+    <!-- 도서관리 modal -->
+    <div id="modal2" class="modal" style=" width:80%; max-height:90%;">
+      <div class="modal-content ">
+        <h4>도서관리/대여시스템</h4>
+        <div> <!--본문 div 열기 -->
+
+          <ul class="collection">
+
+            <!-- 리스트 1 -->
+            <li class="collection-item">
+              <!-- 깃허브 or 링크 div -->
+              <div class="row"> <!-- 깃허브 or 링크 div 열기-->
+                <h5>호스팅링크 / github</h5>
+                <div><a href="https://github.com/kjb7907/LibraryManagement" target="_blank">https://github.com/kjb7907/LibraryManagement</a></div>
+              </div> <!-- 깃허브 or 링크 div 닫기 -->
+            </li>
+
+            <!-- 리스트 2 -->
+            <li class="collection-item">
+              <!-- 개발환경 div -->
+              <div class="row"> <!-- 개발환경 div 열기 -->
+                <h5>개발환경</h5>
+              </div> <!-- 개발환경 div 닫기 -->
+            </li>
+
+            <!-- 리스트 3 -->
+            <li class="collection-item">
+              <!-- 상세설명 div -->
+              <div class="row"> <!-- 상세설명 div 열기 -->
+                <h5>설명</h5>
+              </div> <!-- 상세설명 div 닫기 -->
+            </li>
+
+            <!-- 리스트 4 -->
+            <li class="collection-item">
+              <!-- 기능설명 div -->
+              <div> <!-- 기능설명 div 열기 -->
+                <h5>기능</h5>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/lib/lib_bookadd.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">도서등록</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/lib/lib_member.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">회원등급변경</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/lib/lib_bookrental.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">도서 대여</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/lib/lib_bookreturn.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">도서 반납</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/lib/lib_search.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">도서 반납</div>
+                </div>
+
+              </div> <!-- 기능설명 div 닫기 -->
+            </li>
+
+          </ul>
+
+        </div> <!--본문 div 닫기 -->
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">닫기</a>
+      </div>
+    </div> <!-- modal div 닫기-->
+
+
+    <!-- model1 게시판 modal -->
+    <div id="modal3" class="modal" style=" width:80%; max-height:90%;">
+      <div class="modal-content ">
+        <h4>model 1 게시판</h4>
+        <div> <!--본문 div 열기 -->
+
+          <ul class="collection">
+
+            <!-- 리스트 1 -->
+            <li class="collection-item">
+              <!-- 깃허브 or 링크 div -->
+              <div class="row"> <!-- 깃허브 or 링크 div 열기-->
+                <h5>호스팅링크 / github</h5>
+                <div><a href="https://github.com/kjb7907/model1-board" target="_blank">https://github.com/kjb7907/model1-board</a></div>
+              </div> <!-- 깃허브 or 링크 div 닫기 -->
+            </li>
+
+            <!-- 리스트 2 -->
+            <li class="collection-item">
+              <!-- 개발환경 div -->
+              <div class="row"> <!-- 개발환경 div 열기 -->
+                <h5>개발환경</h5>
+              </div> <!-- 개발환경 div 닫기 -->
+            </li>
+
+            <!-- 리스트 3 -->
+            <li class="collection-item">
+              <!-- 상세설명 div -->
+              <div class="row"> <!-- 상세설명 div 열기 -->
+                <h5>설명</h5>
+              </div> <!-- 상세설명 div 닫기 -->
+            </li>
+
+            <!-- 리스트 4 -->
+            <li class="collection-item">
+              <!-- 기능설명 div -->
+              <div> <!-- 기능설명 div 열기 -->
+                <h5>기능</h5>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/model1board/model1board_main.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">리스트 , 검색</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/model1board/model1board_view.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">상세페이지</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/model1board/model1board_add.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">기능</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/model1board/model1board_login.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">로그인</div>
+                </div>
+
+              </div> <!-- 기능설명 div 닫기 -->
+            </li>
+
+          </ul>
+
+        </div> <!--본문 div 닫기 -->
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">닫기</a>
+      </div>
+    </div> <!-- modal div 닫기-->
+
+
+    <!-- staff modal -->
+    <div id="modal4" class="modal" style=" width:80%; max-height:90%;">
+      <div class="modal-content ">
+        <h4>model 2 사원관리 CRUD</h4>
+        <div> <!--본문 div 열기 -->
+
+          <ul class="collection">
+
+            <!-- 리스트 1 -->
+            <li class="collection-item">
+              <!-- 깃허브 or 링크 div -->
+              <div class="row"> <!-- 깃허브 or 링크 div 열기-->
+                <h5>호스팅링크 / github</h5>
+                <div><a href="https://github.com/kjb7907/Staff-Management" target="_blank">https://github.com/kjb7907/Staff-Management</a></div>
+              </div> <!-- 깃허브 or 링크 div 닫기 -->
+            </li>
+
+            <!-- 리스트 2 -->
+            <li class="collection-item">
+              <!-- 개발환경 div -->
+              <div class="row"> <!-- 개발환경 div 열기 -->
+                <h5>개발환경</h5>
+                <div>java 1.8  HTML5 CSS jQuery BootStrap oracle Apache Tomcat 9.0</div>
+              </div> <!-- 개발환경 div 닫기 -->
+            </li>
+
+            <!-- 리스트 3 -->
+            <li class="collection-item">
+              <!-- 상세설명 div -->
+              <div class="row"> <!-- 상세설명 div 열기 -->
+                <h5>설명</h5>
+              </div> <!-- 상세설명 div 닫기 -->
+            </li>
+
+            <!-- 리스트 4 -->
+            <li class="collection-item">
+              <!-- 기능설명 div -->
+              <div> <!-- 기능설명 div 열기 -->
+                <h5>기능</h5>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/staff/staff_main.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">등록</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/staff/staff_list.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">조회</div>
+                </div>
+
+              </div> <!-- 기능설명 div 닫기 -->
+            </li>
+
+          </ul>
+
+        </div> <!--본문 div 닫기 -->
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">닫기</a>
+      </div>
+    </div> <!-- modal div 닫기-->
+
+
+    <!-- nodejs modal -->
+    <div id="modal5" class="modal" style=" width:80%; max-height:90%;">
+      <div class="modal-content ">
+        <h4>Node.js 게시판</h4>
+        <div> <!--본문 div 열기 -->
+
+          <ul class="collection">
+
+            <!-- 리스트 1 -->
+            <li class="collection-item">
+              <!-- 깃허브 or 링크 div -->
+              <div class="row"> <!-- 깃허브 or 링크 div 열기-->
+                <h5>호스팅링크 / github</h5>
+                <div><a href="https://github.com/kjb7907/Node.js-Board" target="_blank">https://github.com/kjb7907/Node.js-Board</a></div>
+              </div> <!-- 깃허브 or 링크 div 닫기 -->
+            </li>
+
+            <!-- 리스트 2 -->
+            <li class="collection-item">
+              <!-- 개발환경 div -->
+              <div class="row"> <!-- 개발환경 div 열기 -->
+                <h5>개발환경</h5>
+                <div>javascript node.js express jade bootstrap</div>
+              </div> <!-- 개발환경 div 닫기 -->
+            </li>
+
+            <!-- 리스트 3 -->
+            <li class="collection-item">
+              <!-- 상세설명 div -->
+              <div class="row"> <!-- 상세설명 div 열기 -->
+                <h5>설명</h5>
+              </div> <!-- 상세설명 div 닫기 -->
+            </li>
+
+            <!-- 리스트 4 -->
+            <li class="collection-item">
+              <!-- 기능설명 div -->
+              <div> <!-- 기능설명 div 열기 -->
+                <h5>기능</h5>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/nodejsboard/nodejsboard_main.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">리스트 페이지</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/nodejsboard/nodejsboard_view.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">상세페이지</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/nodejsboard/nodejsboard_add.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">게시글 등록</div>
+                </div>
+
+                <div class="row">
+                  <div class="col s3"><img src="./img/portfolio_img/nodejsboard/nodejsboard_modify.png" class="materialboxed responsive-img"></div>
+                  <div class="col s7">게시글 수정</div>
+                </div>
+
+              </div> <!-- 기능설명 div 닫기 -->
+            </li>
+
+          </ul>
+
+        </div> <!--본문 div 닫기 -->
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">닫기</a>
+      </div>
+    </div> <!-- modal div 닫기-->
+
+  </div> <!-- modal 컨테이너 닫기-->
+
+
+
+
+    <!-- modal script -->
+    <script>
+      $('.modal').modal();
+    </script>
+
+
+    <a name="skill"></a> <!-- 스킬 위치 -->
+
+    <!-- 스킬 -->
+
+    <div class="section white">
+      <div class="row container">
+        <h4 class="header">DEV SKILL</h4>
+        <p class="grey-text text-darken-3 lighten-3">개발관련 공부중인 언어 및 사용경험 툴 / 기술</p>
+      </div>
+    </div>
+
+
+
+    <!-- language -->
+    <div class="container">
+      <h5>language</h5>
+
+      <div>
+        <ul class="collection">
+
+          <li class="collection-item avatar row">
+            <span class="col s1"style="position:relative ; left:-50px;"><img src="./img/icon_java.png"></span>
+            <span class="title col s10">Java</span>
+          </li>
+
+          <li class="collection-item avatar row">
+            <span class="col s1"style="position:relative ; left:-50px;"><img src="./img/icon_javascript.png"></span>
+            <span class="title col s11">JavaScript</span>
+          </li>
+
+          <li class="collection-item avatar row">
+            <span class="col s1"style="position:relative ; left:-50px;"><img src="./img/icon_html.png"></span>
+            <span class="title col s11">HTML / CSS</span>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+
+
+    <!-- server side -->
+    <div class="container">
+      <h5>server side</h5>
+
+      <div>
+        <ul class="collection">
+
+          <li class="collection-item avatar row">
+            <span class="col s1"style="position:relative ; left:-50px;"><img src="./img/icon_java.png"></span>
+            <span class="title col s10">JSP / Servlet</span>
+          </li>
+
+          <li class="collection-item avatar row">
+            <span class="col s1"style="position:relative ; left:-50px;"><img src="./img/icon_nodejs.png"></span>
+            <span class="title col s11">node.js</span>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+
+
+    <!-- data base -->
+    <div class="container">
+      <h5>data base</h5>
+
+      <div>
+        <ul class="collection">
+
+          <li class="collection-item avatar row">
+            <span class="col s1"style="position:relative ; left:-50px;"><img src="./img/icon_mysql.png"></span>
+            <span class="title col s10">my Sql</span>
+          </li>
+
+          <li class="collection-item avatar row">
+            <span class="col s1"style="position:relative ; left:-50px;"><img src="./img/icon_oracle.png"></span>
+            <span class="title col s11">oracle</span>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+
+
+    <!-- frame work / library-->
+    <div class="container">
+      <h5>frame work / library experience</h5>
+
+      <div>
+        <ul class="collection">
+
+          <li class="collection-item avatar row">
+            <div class="title col s10">Spring , mybatis</div>
+            <div class="title col s10">jQuery</div>
+            <div class="title col s10">CSS FrameWork : BootStrap , Semantic ui , materialize</div>
+          </li>
+
+
+        </ul>
+      </div>
+    </div>
+
+
+
+
+    <!-- etc -->
+    <div class="container">
+      <h5>etc</h5>
+
+      <div>
+        <ul class="collection">
+
+          <li class="collection-item avatar row">
+            <span class="col s1"style="position:relative ; left:-50px;"><img src="./img/icon_photoshop.png"></span>
+            <span class="title col s10">PhotoShop</span>
+          </li>
+
+          <li class="collection-item avatar row">
+            <span class="col s1"style="position:relative ; left:-50px;"><img src="./img/icon_illustrator.png"></span>
+            <span class="title col s11">illustrator</span>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+    <!-- 여백 -->
+    <div style="height:100px"></div>
+
+
+
+
+  </body>
+</html>
